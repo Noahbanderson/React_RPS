@@ -18,7 +18,11 @@ class App extends React.Component {
     games: 0,
     youWin: false,
     compWins: false,
-    itsaTie: false
+    itsaTie: false,
+    twoPlay: false,
+    twoWins: 0,
+    twoLoses: 0,
+    
 
   }
 
@@ -33,22 +37,27 @@ class App extends React.Component {
       games: 0,
       youWin: false,
       compWins: false,
-      itsaTie: false
-    },() => {this.twoFuncMenu()} )
+      itsaTie: false,
+      twoLoses: 0,
+      twoWins: 0
+    } )
   }
 
+  // ,() => {this.twoPlayerFuncMenu()}
 
-  twoFuncMenu = () => {
-    
-  }
+  // twoPlayerFuncMenu = () => {
+  //   this.twoMenu()
+  // }
 
   twoMenu = () => {
-    
+    debugger
   }
 
+  secondUserChoiceFunc = (option) => {
+    // debugger
 
-
-
+    this.setState({twoPlay: false, compChoice: option.id}, () => this.gameFunc())
+  }
 
   userChoiceFunc = (option) => {
     this.setState(
@@ -56,15 +65,17 @@ class App extends React.Component {
       () => {this.compChoiceFunc();}
     );    
   }
+  
+  //evoke 2nd user choice, then run game. 
 
   compChoiceFunc = () => {
     if (this.state.twoPlayer === false ){
       const compChoice = Math.floor((1 + Math.random()*3) )
       this.setState({compChoice}, () => {this.gameFunc();})
-    } else {
-
-      //evoke 2nd user choice, then run game. 
+    } else if (this.state.twoPlayer === true) {
+      this.setState({twoPlay: true})
     }
+
   }
 
   addTie = () => {
@@ -82,7 +93,13 @@ class App extends React.Component {
     this.setState({games: this.state.games + 1})
   }
 
+  addTwoLose = () => {
+    this.setState({twoLoses: this.state.twoLoses + 1})
+  }
 
+  addTwoWin = () => {
+    this.setState({twoWins: this.state.twoWins + 1})
+  }
 
   gameFunc = () => {
     const u = this.state.userChoice
@@ -94,24 +111,27 @@ class App extends React.Component {
       this.setState({youWin: false})
       this.setState({compWins: false})
       this.addTie()
-
+      
     } else if (u === 1 && c === 2) {
       this.setState({itsaTie: false})
       this.setState({youWin: false})
       this.setState({compWins: true})
       this.addComp()
+      {this.state.twoPlayer ? this.addTwoWin() : console.log("") }
 
     } else if (u === 1 && c === 3) {
       this.setState({itsaTie: false})
       this.setState({youWin: true})
       this.setState({compWins: false})
       this.addYou()
+      {this.state.twoPlayer ? this.addTwoLose() : console.log("") }
 
     } else if (u === 2 && c === 1) {
       this.setState({itsaTie: false})
       this.setState({youWin: true})
       this.setState({compWins: false})
       this.addYou()
+      {this.state.twoPlayer ? this.addTwoLose() : console.log("") }
 
     } else if (u === 2 && c === 2) {
       this.setState({itsaTie: true})
@@ -124,18 +144,21 @@ class App extends React.Component {
       this.setState({youWin: false})
       this.setState({compWins: true})
       this.addComp()
+      {this.state.twoPlayer ? this.addTwoWin() : console.log("") }
 
     } else if (u === 3 && c === 1) {
       this.setState({itsaTie: false})
       this.setState({youWin: false})
       this.setState({compWins: true})
       this.addComp()
-
+      {this.state.twoPlayer ? this.addTwoWin() : console.log("") }
+      
     } else if (u === 3 && c === 2) {
       this.setState({itsaTie: false})
       this.setState({youWin: true})
       this.setState({compWins: false})
       this.addYou()
+      {this.state.twoPlayer ? this.addTwoLose() : console.log("") }
 
     } else if (u === 3 && c === 3) {
       this.setState({itsaTie: true})
@@ -150,42 +173,82 @@ class App extends React.Component {
     if (this.state.youWin === true) {
       return {backgroundColor: "green"}
     } else if (this.state.compWins === true) {
-      return {backgroundColor: "red"}
+      return {backgroundColor: "blue"}
     }
   }
   
+  displayWinTwo = () => (
+    this.state.games ? 
+      <div>
+        <br/>
+        <Button style={this.winningColor()}>
+          { this.state.youWin ? "You Win" : "" }
+          { this.state.compWins ? "Comp Wins" : ""}
+          { this.state.itsaTie ? "Its a Tie" : ""}
+        </Button> 
+      </div>
+      : ""
+    
+  )
+
+  displyWinComp = () => (
+    this.state.games ? 
+      <div>
+        <br/>
+        <Button style={this.winningColor()}>
+          { this.state.youWin ? "Player One Win" : "" }
+          { this.state.compWins ? "Player Two Wins" : ""}
+          { this.state.itsaTie ? "Its a Tie" : ""}
+        </Button> 
+      </div>
+      : "" 
+  )
+
+  twoPlayerSecret = () => (
+    this.state.options.map( option => 
+      { if (option.id === this.state.userChoice)
+        return( option.name)
+      }
+    )
+  )
+
 
   render() {
-    
-
-
-
     return (
       <Container style={{margin: "25px"}}>   
         <Header as="h1" style={{textAlign: "center"}} >Rock, Paper, Scissors</Header>
         <Checkbox onClick={this.toggleCheckBox} toggle/>
+
+
         <div>
           Computer : Two Player
         </div>
         <hr />
         <br />
-        <Header as="h3">What will you throw?</Header> 
+
+
+        <Header as="h3">{this.state.twoPlay ? "Second Player's Choice. " : ""}What will you throw?</Header> 
         <br />
 
         <Choices 
           choices={this.state.options}
           userChoiceFunc={this.userChoiceFunc}
+          twoPlay={this.state.twoPlay}
+          secondUserChoiceFunc={this.secondUserChoiceFunc}
         />
         <br />
+
+
+
+
+      
         <div> 
-          You threw {this.state.options.map( option => 
-            { if (option.id === this.state.userChoice)
-              return( option.name)
-            }
-          )}
+          {this.state.twoPlayer ? "Player One " : "You"} threw { this.state.twoPlay ? "" : this.twoPlayerSecret()}
         </div>
+
+
         <div>
-          Comp threw {this.state.options.map( option => 
+          {this.state.twoPlayer ? "Player Two " : "Comp"} threw {this.state.options.map( option => 
               { if (option.id === this.state.compChoice)
               return (option.name)
             }
@@ -193,19 +256,16 @@ class App extends React.Component {
         </div>
         
 
-        {this.state.games ? 
-          <div>
-            <br/>
-            <Button style={this.winningColor()}>
-              { this.state.youWin ? "You Win" : "" }
-              { this.state.compWins ? "Comp Wins" : ""}
-              { this.state.itsaTie ? "Its a Tie" : ""}
-            </Button> 
-          </div>
-          : ""
-        }
+
+
+        {this.state.twoPlayer ? this.displyWinComp() : this.displayWinTwo() } 
+
+
+
+
         
         <br />
+        {this.state.twoPlayer ? "Player One Stats" : ""}
         <div> 
           Wins: {this.state.wins}, Win %: {this.state.wins ? (this.state.wins / this.state.games * 100) : "" }
         </div>
@@ -215,6 +275,29 @@ class App extends React.Component {
         <div>
           Loses: {this.state.loses}, Lose %: {this.state.loses ? (this.state.loses / this.state.games * 100) : "" }
         </div>
+        <br />
+
+
+
+
+
+        {this.state.twoPlayer ? 
+          <div>
+            Player Two Stats
+            <br/>
+            <div> 
+              Wins: {this.state.twoWins}, Win %: {this.state.twoWins ? (this.state.twoWins / this.state.games * 100) : "" }
+            </div>
+            <div>
+              Ties: {this.state.ties}, Tie %: {this.state.ties ? (this.state.ties / this.state.games * 100) : "" }
+            </div>
+            <div>
+              Loses: {this.state.twoLoses}, Lose %: {this.state.twoLoses ? (this.state.twoLoses / this.state.games * 100) : "" }
+            </div>
+          </div>
+          : ""}
+
+          
 
       </Container>
     )

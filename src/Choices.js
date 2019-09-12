@@ -9,7 +9,13 @@ const Choices = (props) => {
     <Grid.Row >
       {props.choices.map( option => (
         <Grid.Column key={option.id}>
-          <Card onClick={() => props.userChoiceFunc(option)} description={option.name}/> 
+          <Card onClick={
+                  props.twoPlay ? 
+                  () => props.secondUserChoiceFunc(option)
+                  : 
+                  () => props.userChoiceFunc(option) 
+                  }
+                description={option.name}/> 
         </Grid.Column>
       ))} 
     </Grid.Row>
@@ -19,3 +25,8 @@ const Choices = (props) => {
 }
 
 export default Choices
+
+
+ 
+
+//  onClick={() => props.userChoiceFunc(option)}
