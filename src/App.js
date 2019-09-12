@@ -43,19 +43,12 @@ class App extends React.Component {
     } )
   }
 
-  // ,() => {this.twoPlayerFuncMenu()}
-
-  // twoPlayerFuncMenu = () => {
-  //   this.twoMenu()
-  // }
 
   twoMenu = () => {
     debugger
   }
 
   secondUserChoiceFunc = (option) => {
-    // debugger
-
     this.setState({twoPlay: false, compChoice: option.id}, () => this.gameFunc())
   }
 
@@ -117,21 +110,21 @@ class App extends React.Component {
       this.setState({youWin: false})
       this.setState({compWins: true})
       this.addComp()
-      {this.state.twoPlayer ? this.addTwoWin() : console.log("") }
+       this.addTwoWin()  
 
     } else if (u === 1 && c === 3) {
       this.setState({itsaTie: false})
       this.setState({youWin: true})
       this.setState({compWins: false})
       this.addYou()
-      {this.state.twoPlayer ? this.addTwoLose() : console.log("") }
+       this.addTwoLose()  
 
     } else if (u === 2 && c === 1) {
       this.setState({itsaTie: false})
       this.setState({youWin: true})
       this.setState({compWins: false})
       this.addYou()
-      {this.state.twoPlayer ? this.addTwoLose() : console.log("") }
+       this.addTwoLose()  
 
     } else if (u === 2 && c === 2) {
       this.setState({itsaTie: true})
@@ -144,21 +137,21 @@ class App extends React.Component {
       this.setState({youWin: false})
       this.setState({compWins: true})
       this.addComp()
-      {this.state.twoPlayer ? this.addTwoWin() : console.log("") }
+       this.addTwoWin()  
 
     } else if (u === 3 && c === 1) {
       this.setState({itsaTie: false})
       this.setState({youWin: false})
       this.setState({compWins: true})
       this.addComp()
-      {this.state.twoPlayer ? this.addTwoWin() : console.log("") }
+       this.addTwoWin()  
       
     } else if (u === 3 && c === 2) {
       this.setState({itsaTie: false})
       this.setState({youWin: true})
       this.setState({compWins: false})
       this.addYou()
-      {this.state.twoPlayer ? this.addTwoLose() : console.log("") }
+       this.addTwoLose()  
 
     } else if (u === 3 && c === 3) {
       this.setState({itsaTie: true})
@@ -204,7 +197,7 @@ class App extends React.Component {
       : "" 
   )
 
-  twoPlayerSecret = () => (
+  twoPlayerSecretone = () => (
     this.state.options.map( option => 
       { if (option.id === this.state.userChoice)
         return( option.name)
@@ -212,10 +205,18 @@ class App extends React.Component {
     )
   )
 
+  twoPlayerSecrettwo = () => (
+    this.state.options.map( option => 
+      { if (option.id === this.state.compChoice)
+        return (option.name)
+      }
+    )
+  )
+
 
   render() {
     return (
-      <Container style={{margin: "25px"}}>   
+      <Container style={{margin: "25px", textAlign: "center"}}>   
         <Header as="h1" style={{textAlign: "center"}} >Rock, Paper, Scissors</Header>
         <Checkbox onClick={this.toggleCheckBox} toggle/>
 
@@ -243,16 +244,12 @@ class App extends React.Component {
 
       
         <div> 
-          {this.state.twoPlayer ? "Player One " : "You"} threw { this.state.twoPlay ? "" : this.twoPlayerSecret()}
+          {this.state.twoPlayer ? "Player One " : "You"} threw { this.state.twoPlay ? "" : this.twoPlayerSecretone()}
         </div>
 
 
         <div>
-          {this.state.twoPlayer ? "Player Two " : "Comp"} threw {this.state.options.map( option => 
-              { if (option.id === this.state.compChoice)
-              return (option.name)
-            }
-          )}
+          {this.state.twoPlayer ? "Player Two " : "Comp"} threw { this.state.twoPlay ? "" : this.twoPlayerSecrettwo()}
         </div>
         
 
@@ -305,11 +302,10 @@ class App extends React.Component {
 }
 
 export default App;
-// , textAlign: "center"
+
 
 
 //  Bonus Objectives:
 
-// !Make it so it works with two players
 
 // ?See if you can use componentDidUpdate( ) 

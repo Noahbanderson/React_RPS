@@ -1,5 +1,5 @@
 import React from 'react';
-import { Card, Grid } from "semantic-ui-react";
+import { Grid } from "semantic-ui-react";
 
 
 const Choices = (props) => {
@@ -9,13 +9,17 @@ const Choices = (props) => {
     <Grid.Row >
       {props.choices.map( option => (
         <Grid.Column key={option.id}>
-          <Card onClick={
-                  props.twoPlay ? 
-                  () => props.secondUserChoiceFunc(option)
-                  : 
-                  () => props.userChoiceFunc(option) 
-                  }
-                description={option.name}/> 
+          <img style={{borderRadius: "50%", height: "200px"}}
+            src={require(`./images/${option.name}.png`)} 
+            onClick={
+                    props.twoPlay ? 
+                      () => props.secondUserChoiceFunc(option)
+                    : 
+                      () => props.userChoiceFunc(option) 
+                  } 
+          />
+          
+
         </Grid.Column>
       ))} 
     </Grid.Row>
@@ -29,4 +33,11 @@ export default Choices
 
  
 
-//  onClick={() => props.userChoiceFunc(option)}
+//                add Card to semantic ui react
+//                <Card onClick={
+//                   props.twoPlay ? 
+//                   () => props.secondUserChoiceFunc(option)
+//                   : 
+//                   () => props.userChoiceFunc(option) 
+//                   }
+//                 description={option.name}/> 
